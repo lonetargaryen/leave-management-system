@@ -1,7 +1,8 @@
 package leavemanagement;
 
 import java.util.Scanner;
-// import java.sql.*;
+import java.util.ResourceBundle;  
+import java.sql.*;
 
 public class Menu {
     static void displayMainMenu() {
@@ -27,27 +28,28 @@ public class Menu {
                 break;
             }
         }
-        // final String url = "jdbc:mysql://localhost:3306/sdlproject";
-        // final String user = "root";
-        // final String password = "";
-        // Connection con; 
-        // Statement stmt; 
-        // ResultSet rs; 
-        // String query = "select * from employees";
-        // try { 
-        //     con = DriverManager.getConnection(url, user, password);
-        //     stmt = con.createStatement(); // executing SELECT query 
-        //     rs = stmt.executeQuery(query);
-        //     // while (rs.next()) { 
-        //     //     System.out.println(rs);
-        //     //     int count = rs.getInt(1); 
-        //     //     System.out.println("Total number of employees in the table : " + count);
-        //     // }
-        //     rs.next();
-        //     System.out.println(rs.getString(2));
-        // } catch (SQLException sqlEx) { 
-        //     sqlEx.printStackTrace(); 
-        // }
+        
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con; 
+        Statement stmt; 
+        ResultSet rs; 
+        String query = "select * from employees";
+        try { 
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            stmt = con.createStatement(); // executing SELECT query 
+            rs = stmt.executeQuery(query);
+            // while (rs.next()) { 
+            //     System.out.println(rs);
+            //     int count = rs.getInt(1); 
+            //     System.out.println("Total number of employees in the table : " + count);
+            // }
+            rs.next();
+            System.out.println(rs.getString(2));
+        } catch (SQLException sqlEx) { 
+            sqlEx.printStackTrace(); 
+        }
         sc.close();
     }
 }
