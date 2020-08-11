@@ -10,23 +10,22 @@ public class Menu {
         System.out.println("Enter your choice: ");
         Scanner sc = new Scanner(System.in);
         int userChoice = sc.nextInt();
-        System.out.println("You entered - " + userChoice);
 
         switch (userChoice) {
             case 1: {
-                System.out.println("Login handler will be called.");
+                System.out.println("Login handler will be called.\n");
                 LoginRegister.loginHandler();
                 sc.close();
                 break;
             }
             case 2: {
-                System.out.println("Register handler will be called.");
+                System.out.println("Register handler will be called.\n");
                 LoginRegister.registerHandler();
                 sc.close();
                 break;
             }
             default: {
-                System.out.println("Invalid option.");
+                System.out.println("Invalid option.\n");
                 sc.close();
                 break;
             }
