@@ -14,7 +14,7 @@ public class LoginRegister {
         System.out.println(askID);
         ID = sc.nextInt();
 
-        Queries.loginQuery(ID);
+        Queries.loginQuery(jobType, ID);
 
         sc.close();
     }
@@ -36,7 +36,7 @@ public class LoginRegister {
             designation = sc.next();
         }
         System.out.println(jobType + " " + ID + " " + name + " " + designation);
-        Queries.registerQuery(ID, name, designation);
+        Queries.registerQuery(jobType, ID, name, designation);
         sc.close(); 
     }
 }
