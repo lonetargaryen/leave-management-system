@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class Queries {
 
-    static void loginQuery(int jobType, int ID) {
+    static Employee loginQuery(int jobType, int ID) {
         ResourceBundle reader = null;
         reader = ResourceBundle.getBundle("resources/dbconfig");
 
@@ -27,16 +27,21 @@ public class Queries {
             final ResultSet rs = preparedStmt.executeQuery();
             
             if (rs.next()) {
-                System.out.println(rs.getInt(1));
+                // System.out.println(rs.getInt(1));
                 System.out.println("Logged in.");
+                Employee currentEmployee = new Employee(rs.getString(2), rs.getInt(1), rs.getString(3));
+                con.close();
+                return currentEmployee;
+                // todo: create employee object, call constructor and display menu
             }
             else {
                 System.out.println("Error logging in.");
+                con.close();
+                return new Employee("", -1, "");
             }
-            
-            con.close();
         } catch (SQLException sqlEx) {
-            sqlEx.printStackTrace(); 
+            sqlEx.printStackTrace();
+            return new Employee("", -1, "");
         }
     }
 

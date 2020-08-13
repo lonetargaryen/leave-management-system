@@ -6,7 +6,7 @@ public class LoginRegister {
 
     static void loginHandler() {
 
-        System.out.println("Enter 1 for employee and 2 for project manager - ");
+        System.out.println("Enter 1 for employee login and 2 for project manager login - ");
         Scanner sc = new Scanner(System.in);
         int jobType = sc.nextInt();
         int ID;
@@ -14,7 +14,20 @@ public class LoginRegister {
         System.out.println(askID);
         ID = sc.nextInt();
 
-        Queries.loginQuery(jobType, ID);
+        Employee currentEmployee = Queries.loginQuery(jobType, ID);
+
+        if ((currentEmployee.emp_ID != -1) && (jobType == 1)) {
+            //create employee object
+            System.out.println("\nWelcome back " + currentEmployee.emp_name + "!\n");
+            currentEmployee.displayEmployeeMenu();
+        }
+        else if ((currentEmployee.emp_ID != -1) && (jobType == 2)) {
+            //create pm object
+            currentEmployee.displayEmployeeMenu();
+        }
+        else {
+            Menu.displayMainMenu();
+        }
 
         sc.close();
     }
