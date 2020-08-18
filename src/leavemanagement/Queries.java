@@ -11,7 +11,7 @@ public class Queries {
 
         Connection con;
 
-        try { 
+        try {
             con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
             
             String query;
@@ -73,9 +73,34 @@ public class Queries {
             }
             
             con.close();
-            System.out.println("Record has been inserted successfully.");
+            System.out.println("\nYou have been registered!\n");
+        } catch (SQLException sqlEx) {
+            //sqlEx.printStackTrace(); 
+            System.out.println("\nRegistration could not be done.\n");
+        }
+    }
+
+    static void applyLeaveQuery(int emp_id, Date dateLeave, String leaveMessage) {
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "insert into employee_leave values(?, ?, ?)";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, emp_id);
+            preparedStmt.setDate(2, dateLeave);
+            preparedStmt.setString(3, leaveMessage);
+            preparedStmt.execute();
+            
+            con.close();
+            System.out.println("\nYour leave application has been submitted!\n");
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace(); 
+            System.out.println("\nYour leave application couldn't be submitted due to an SQL Exception.\n");
         }
     }
 }

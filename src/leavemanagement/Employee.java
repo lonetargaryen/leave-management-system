@@ -1,5 +1,10 @@
 package leavemanagement;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+
 public class Employee {
 
     public String emp_name;
@@ -19,7 +24,7 @@ public class Employee {
     }
 
     public void displayDetails() {
-        System.out.println("name - " + emp_name + " ID - " + emp_ID + " designation - " + emp_designation);
+        System.out.println("\nname - " + emp_name + " ID - " + emp_ID + " designation - " + emp_designation);
     }
 
     public void displayEmployeeMenu() {
@@ -30,5 +35,40 @@ public class Employee {
         System.out.println("4. View all my leave applications.\n");
         System.out.println("5. Show company's leave policy.\n");
         System.out.println("6. Logout.");
+
+        showEmployeeDetails();
+        applyLeave();
+    }
+
+    private void showEmployeeDetails() {
+        System.out.println("\nEmployee ID - " + emp_ID);
+        System.out.println("\nEmployee name - " + emp_name);
+        System.out.println("\nDesignation" + emp_designation);
+    }
+
+    private void applyLeave() {
+        String leaveMessage, leaveDate;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nEnter date of leave (dd/mm/yyyy) - ");
+        leaveDate = sc.nextLine();
+        System.out.println("\nEnter leave application - ");
+        leaveMessage = sc.nextLine();
+        sc.close();
+        Date dateLeave = new Date();
+        try {
+            dateLeave = new SimpleDateFormat("dd/MM/yyyy").parse(leaveDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(dateLeave);
+        System.out.println(leaveMessage);
+        java.sql.Date dateLeaveSQL = new java.sql.Date(dateLeave.getTime());
+
+        Queries.applyLeaveQuery(emp_ID, dateLeaveSQL, leaveMessage);
+
+        Leave newLeave = new Leave(emp_ID, dateLeave, leaveMessage);
+        Manager templmao = new Manager();
+        Manager.leaveApplicationQueue.add(newLeave);
+        templmao.printLeaveApplicationQueue();
     }
 }
