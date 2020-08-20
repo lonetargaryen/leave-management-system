@@ -4,38 +4,44 @@ import java.util.Scanner;
 
 public class LoginRegister {
 
-    static void loginHandler() {
+    static void employeeLoginHandler(Scanner sc) {
 
-        System.out.println("Enter 1 for employee login and 2 for project manager login - ");
-        Scanner sc = new Scanner(System.in);
-        int jobType = sc.nextInt();
-        int ID;
-        String askID = (jobType == 1) ? "Enter employee ID - " : "Enter manager ID - ";
-        System.out.println(askID);
-        ID = sc.nextInt();
+        System.out.println("\nEnter your employee ID - ");
+        int ID = sc.nextInt();
 
-        Employee currentEmployee = Queries.loginQuery(jobType, ID);
+        Employee currentEmployee = Queries.employeeLoginQuery(ID);
 
-        if ((currentEmployee.emp_ID != -1) && (jobType == 1)) {
+        if (currentEmployee.emp_ID != -1) {
             //create employee object
             System.out.println("\nWelcome back " + currentEmployee.emp_name + "!\n");
-            currentEmployee.displayEmployeeMenu();
-        }
-        else if ((currentEmployee.emp_ID != -1) && (jobType == 2)) {
-            //create pm object
-            currentEmployee.displayEmployeeMenu();
+            currentEmployee.displayEmployeeMenu(sc);
         }
         else {
-            Menu.displayMainMenu();
+            System.out.println("\nCould not login.\n");
         }
-
         sc.close();
     }
 
-    static void registerHandler() {
+    static void managerLoginHandler(Scanner sc) {
+
+        System.out.println("\nEnter your manager ID - ");
+        int ID = sc.nextInt();
+
+        Manager currentManager = Queries.managerLoginQuery(ID);
+
+        if (currentManager.manager_ID != -1) {
+            //create employee object
+            System.out.println("\nWelcome back " + currentManager.manager_name + "!\n");
+            currentManager.displayManagerMenu(sc);
+        }
+        else {
+            System.out.println("\nCould not login.\n");
+        }
+    }
+
+    static void registerHandler(Scanner sc) {
         
         System.out.println("Enter 1 for employee and 2 for project manager - ");
-        Scanner sc = new Scanner(System.in);
         int jobType = sc.nextInt();
         int ID;
         String askID = (jobType == 1) ? "Enter employee ID - " : "Enter manager ID - ";
@@ -50,6 +56,5 @@ public class LoginRegister {
         }
         System.out.println(jobType + " " + ID + " " + name + " " + designation);
         Queries.registerQuery(jobType, ID, name, designation);
-        sc.close(); 
     }
 }

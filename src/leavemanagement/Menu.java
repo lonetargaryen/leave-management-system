@@ -14,21 +14,31 @@ public class Menu {
         switch (userChoice) {
             case 1: {
                 System.out.println("Login handler will be called.\n");
-                LoginRegister.loginHandler();
-                sc.close();
+                System.out.println("Enter 1 for employee login and 2 for project manager login - ");
+                int jobType = sc.nextInt();
+                if (jobType == 1) {
+                    //call employee login
+                    LoginRegister.employeeLoginHandler(sc);
+                }
+                else if (jobType ==2) {
+                    //call PM login
+                    LoginRegister.managerLoginHandler(sc);
+                }
+                else {
+                    System.out.println("\nInvalid choice.\n");
+                }
                 break;
             }
             case 2: {
                 System.out.println("Register handler will be called.\n");
-                LoginRegister.registerHandler();
-                sc.close();
+                LoginRegister.registerHandler(sc);
                 break;
             }
             default: {
                 System.out.println("Invalid option.\n");
-                sc.close();
                 break;
             }
         }
+        sc.close();
     }
 }

@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class Queries {
 
-    static Employee loginQuery(int jobType, int ID) {
+    static Employee employeeLoginQuery (int ID) {
         ResourceBundle reader = null;
         reader = ResourceBundle.getBundle("resources/dbconfig");
 
@@ -14,13 +14,7 @@ public class Queries {
         try {
             con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
             
-            String query;
-            if (jobType == 1) {
-                query = "select * from employees where emp_id = ?";
-            }
-            else {
-                query = "select * from manager where manager_id = ?";
-            }
+            String query = "select * from employees where emp_id = ?";
             
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setInt(1, ID);
@@ -32,7 +26,6 @@ public class Queries {
                 Employee currentEmployee = new Employee(rs.getString(2), rs.getInt(1), rs.getString(3));
                 con.close();
                 return currentEmployee;
-                // todo: create employee object, call constructor and display menu
             }
             else {
                 System.out.println("Error logging in.");
@@ -42,6 +35,39 @@ public class Queries {
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
             return new Employee("", -1, "");
+        }
+    }
+
+    static Manager managerLoginQuery(int ID) {
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "select * from manager where manager_id = ?";
+            
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, ID);
+            final ResultSet rs = preparedStmt.executeQuery();
+            
+            if (rs.next()) {
+                // System.out.println(rs.getInt(1));
+                System.out.println("Logged in.");
+                Manager currentManager = new Manager(rs.getString(2), rs.getInt(1));
+                con.close();
+                return currentManager;
+            }
+            else {
+                System.out.println("Error logging in.");
+                con.close();
+                return new Manager("", -1);
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+            return new Manager("", -1);
         }
     }
 

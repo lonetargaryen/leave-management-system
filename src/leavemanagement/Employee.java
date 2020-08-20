@@ -27,17 +27,34 @@ public class Employee {
         System.out.println("\nname - " + emp_name + " ID - " + emp_ID + " designation - " + emp_designation);
     }
 
-    public void displayEmployeeMenu() {
-        System.out.println("\n---------- EMPLOYEE MENU ----------\n");
-        System.out.println("1. Display employee details.\n");
-        System.out.println("2. Apply for a leave.\n");
-        System.out.println("3. Cancel a leave application.\n");
-        System.out.println("4. View all my leave applications.\n");
-        System.out.println("5. Show company's leave policy.\n");
-        System.out.println("6. Logout.");
-
-        showEmployeeDetails();
-        applyLeave();
+    public void displayEmployeeMenu(Scanner sc) {
+        do {
+            System.out.println("\n---------- EMPLOYEE MENU ----------\n");
+            System.out.println("1. Display employee details.\n");
+            System.out.println("2. Apply for a leave.\n");
+            System.out.println("3. Cancel a leave application.\n");
+            System.out.println("4. View all my leave applications.\n");
+            System.out.println("5. Show company's leave policy.\n");
+            System.out.println("6. Logout.");
+            System.out.println("\nEnter your choice - ");
+            
+            int userChoice = sc.nextInt();
+            
+            switch (userChoice) {
+                case 1: {
+                    showEmployeeDetails();
+                    break;
+                }
+                case 2: {
+                    applyLeave(sc);
+                    break;
+                }
+                default: {
+                    System.out.println("\nInvalid choice.");
+                    break;
+                }
+            }
+        } while (true);
     }
 
     private void showEmployeeDetails() {
@@ -46,14 +63,13 @@ public class Employee {
         System.out.println("\nDesignation" + emp_designation);
     }
 
-    private void applyLeave() {
+    private void applyLeave(Scanner sc) {
         String leaveMessage, leaveDate;
-        Scanner sc = new Scanner(System.in);
+        sc.nextLine();
         System.out.println("\nEnter date of leave (dd/mm/yyyy) - ");
         leaveDate = sc.nextLine();
         System.out.println("\nEnter leave application - ");
         leaveMessage = sc.nextLine();
-        sc.close();
         Date dateLeave = new Date();
         try {
             dateLeave = new SimpleDateFormat("dd/MM/yyyy").parse(leaveDate);
