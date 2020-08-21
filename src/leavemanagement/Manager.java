@@ -27,6 +27,9 @@ public class Manager {
         System.out.println("2. View all employees' leave applications.\n");
         System.out.println("3. Show company's leave policy.\n");
         System.out.println("4. Logout.");
+
+        displayDetails();
+        printLeaveApplicationQueue();
     }
 
     public void displayDetails() {

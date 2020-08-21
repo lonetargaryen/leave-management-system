@@ -19,7 +19,6 @@ public class LoginRegister {
         else {
             System.out.println("\nCould not login.\n");
         }
-        sc.close();
     }
 
     static void managerLoginHandler(Scanner sc) {

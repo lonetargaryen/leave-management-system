@@ -1,5 +1,7 @@
 package leavemanagement;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.ResourceBundle;  
 import java.sql.*;
 
@@ -106,7 +108,7 @@ public class Queries {
         }
     }
 
-    static void applyLeaveQuery(int emp_id, Date dateLeave, String leaveMessage) {
+    static void applyLeaveQuery(int emp_id, java.sql.Date dateLeave, String leaveMessage) {
         ResourceBundle reader = null;
         reader = ResourceBundle.getBundle("resources/dbconfig");
 
@@ -128,5 +130,33 @@ public class Queries {
             sqlEx.printStackTrace(); 
             System.out.println("\nYour leave application couldn't be submitted due to an SQL Exception.\n");
         }
+    }
+
+    static HashMap<Date, String> getLeaveQuery(int emp_id) {
+        HashMap<Date, String> hashmap = new HashMap<Date, String>();
+
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "select * from employee_leave where emp_id = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, emp_id);
+            final ResultSet rs = preparedStmt.executeQuery();
+
+            while (rs.next()) {
+                hashmap.put(rs.getDate(2), rs.getString(3));
+            }
+            con.close();
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace(); 
+            System.out.println("\nYour previous leaves couldn't be fetched due to an SQL Exception.\n");
+        }
+
+        return hashmap;
     }
 }
