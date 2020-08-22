@@ -1,5 +1,6 @@
 package leavemanagement;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -37,6 +38,7 @@ public class Manager {
     }
 
     public void printLeaveApplicationQueue() {
+        leaveApplicationQueue = Queries.getLeaveManagerQuery();
         if (leaveApplicationQueue.isEmpty()) {
             System.out.println("\nThe leave application queue is empty.\n");
         }
@@ -45,5 +47,24 @@ public class Manager {
                 obj.printLeaveDetails();
             }
         }
+    }
+
+    static void deleteLeave(int emp_id, Date cancelDate) {
+        Queue<Leave> tempQueue = new LinkedList<Leave>();
+        Manager temp = new Manager();
+        temp.trialFunction();
+        for (Leave itr : leaveApplicationQueue) {
+            if ((itr.emp_ID == emp_id) && (itr.dateLeave == cancelDate)) {
+                continue;
+            }
+            else {
+                tempQueue.add(itr);
+            }
+        }
+        leaveApplicationQueue = tempQueue;
+    }
+
+    public void trialFunction() {
+        //do nothing lmao
     }
 }

@@ -54,6 +54,10 @@ public class Employee {
                     applyLeave(sc);
                     break;
                 }
+                case 3: {
+                    cancelLeave(sc);
+                    break;
+                }
                 case 4: {
                     displayAllLeaves();
                     break;
@@ -97,6 +101,7 @@ public class Employee {
         Leave newLeave = new Leave(emp_ID, dateLeave, leaveMessage);
         System.out.println("print1");
         Manager temp = new Manager();
+        temp.trialFunction();
         Manager.leaveApplicationQueue.add(newLeave);
         System.out.println("print2");
         current_employee_leaves.put(dateLeave, leaveMessage);
@@ -111,6 +116,31 @@ public class Employee {
         for (Date dateIterator : current_employee_leaves.keySet()) {
             System.out.println("\nDate requested - " + dateIterator);
             System.out.println("\nLeave application sent - " + current_employee_leaves.get(dateIterator));
+        }
+    }
+
+    private void cancelLeave(Scanner sc) {
+        sc.nextLine();
+        System.out.println("\nWhich date's holiday do you want to cancel? (dd/mm/yyyy) - ");
+        String cancelString = sc.nextLine();
+        Date cancelDate = new Date();
+        try {
+            cancelDate = new SimpleDateFormat("dd/MM/yyyy").parse(cancelString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (current_employee_leaves.containsKey(cancelDate)) {
+            current_employee_leaves.remove(cancelDate);
+            Manager.deleteLeave(emp_ID, cancelDate);
+            java.sql.Date cancelDateSQL = new java.sql.Date(cancelDate.getTime());
+            Queries.deleteLeaveQuery(emp_ID, cancelDateSQL);
+
+            System.out.println("\nThe leave has been cancelled and project manager has been notified.\n");
+        }
+        else {
+            System.out.println("\nYou haven't applied for a leave on this date.\n");
+            return;
         }
     }
 }

@@ -2,6 +2,8 @@ package leavemanagement;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.ResourceBundle;  
 import java.sql.*;
 
@@ -133,7 +135,7 @@ public class Queries {
     }
 
     static HashMap<Date, String> getLeaveQuery(int emp_id) {
-        HashMap<Date, String> hashmap = new HashMap<Date, String>();
+        HashMap<Date , String> hashmap = new HashMap<Date, String>();
 
         ResourceBundle reader = null;
         reader = ResourceBundle.getBundle("resources/dbconfig");
@@ -158,5 +160,55 @@ public class Queries {
         }
 
         return hashmap;
+    }
+
+    static Queue<Leave> getLeaveManagerQuery() {
+        Queue<Leave> q = new LinkedList<Leave>();
+        
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "select * from employee_leave";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            final ResultSet rs = preparedStmt.executeQuery();
+
+            while (rs.next()) {
+                Leave currentLeave = new Leave(rs.getInt(1), rs.getDate(2), rs.getString(3));
+                q.add(currentLeave);
+            }
+            con.close();
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace(); 
+            System.out.println("\nEmployee leaves couldn't be fetched due to an SQL Exception.\n");
+        }
+
+        return q;
+    }
+
+    static void deleteLeaveQuery(int emp_id, java.sql.Date cancelLeave) {
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "delete from employee_leave where emp_id = ? and leave_date = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, emp_id);
+            preparedStmt.setDate(2, cancelLeave);
+            preparedStmt.execute();
+            
+            con.close();
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace(); 
+            System.out.println("\nYour leave application couldn't be deleted due to an SQL Exception.\n");
+        }
     }
 }
