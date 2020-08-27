@@ -1,5 +1,7 @@
 package leavemanagement;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -26,15 +28,50 @@ public class Manager {
         System.out.println("\n---------- MANAGER MENU ----------\n");
         System.out.println("1. Display manager details.\n");
         System.out.println("2. View all employees' leave applications.\n");
-        System.out.println("3. Show company's leave policy.\n");
-        System.out.println("4. Logout.");
+        System.out.println("3. Sanction a leave application.\n");
+        System.out.println("4. Reject a leave application.\n");
+        System.out.println("5. Show company's leave policy.\n");
+        System.out.println("6. Logout.");
 
-        displayDetails();
-        printLeaveApplicationQueue();
+        do {
+            System.out.println("\nEnter your choice: ");
+            int userChoice = sc.nextInt();
+
+            switch (userChoice) {
+                case 1: {
+                    displayDetails();
+                    break;
+                }
+                case 2: {
+                    printLeaveApplicationQueue();
+                    break;
+                }
+                case 3: {
+                    sanctionLeave(sc);
+                    break;
+                }
+                case 4: {
+                    System.out.println("\nNot yet ready.\n");
+                    break;
+                }
+                case 5: {
+                    System.out.println("\nNot ready yet.\n");
+                    break;
+                }
+                case 6: {
+                    System.out.println("\nLogging out.\n");
+                    return;
+                }
+                default: {
+                    System.out.println("\nInvalid choice.\n");
+                    break;
+                }
+            }
+        } while (true);
     }
 
     public void displayDetails() {
-        System.out.println("name - " + manager_name + " ID - " + manager_ID);
+        System.out.println("\nname - " + manager_name + " ID - " + manager_ID);
     }
 
     public void printLeaveApplicationQueue() {
@@ -66,5 +103,22 @@ public class Manager {
 
     public void trialFunction() {
         //do nothing lmao
+    }
+
+    private void sanctionLeave(Scanner sc) {
+        System.out.println("\nEnter ID of employee whose leave is to be sanctioned - ");
+        int sanctionID = sc.nextInt();
+        sc.nextLine();
+        System.out.println("\nEnter date of leave requested - ");
+        String parseDate = sc.nextLine();
+        Date sanctionDate = new Date();
+        try {
+            sanctionDate = new SimpleDateFormat("dd/MM/yyyy").parse(parseDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        java.sql.Date sanctionDateSQL = new java.sql.Date(sanctionDate.getTime());
+
+        Queries.sanctionLeaveApplicationQuery(sanctionID, sanctionDateSQL);
     }
 }

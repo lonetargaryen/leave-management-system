@@ -12,12 +12,14 @@ public class Employee {
     public int emp_ID;
     public String emp_designation;
     public HashMap<Date, String> current_employee_leaves;
+    public HashMap<Date, Integer> leaveStatusMap;
 
     public Employee() {
         emp_name = "";
         emp_ID = 0;
         emp_designation = "";
         current_employee_leaves = new HashMap<Date, String>();
+        leaveStatusMap = new HashMap<Date, Integer>();
     }
 
     public Employee(String emp_name, int emp_ID, String emp_designation) {
@@ -25,10 +27,7 @@ public class Employee {
         this.emp_ID = emp_ID;
         this.emp_designation = emp_designation;
         current_employee_leaves = Queries.getLeaveQuery(emp_ID);
-    }
-
-    public void displayDetails() {
-        System.out.println("\nname - " + emp_name + " ID - " + emp_ID + " designation - " + emp_designation);
+        leaveStatusMap = Queries.getLeaveStatuses(emp_ID);
     }
 
     public void displayEmployeeMenu(Scanner sc) {
@@ -62,11 +61,16 @@ public class Employee {
                     displayAllLeaves();
                     break;
                 }
+                case 5: {
+                    System.out.println("\nNot ready yet.\n");
+                    break;
+                }
                 case 6: {
+                    System.out.println("\n" + emp_name + " has been logged out.\n");
                     return;
                 }
                 default: {
-                    System.out.println("\nInvalid choice.");
+                    System.out.println("\nInvalid choice.\n");
                     break;
                 }
             }
@@ -92,20 +96,18 @@ public class Employee {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println(dateLeave);
-        System.out.println(leaveMessage);
+        //System.out.println(dateLeave);
+        //System.out.println(leaveMessage);
         java.sql.Date dateLeaveSQL = new java.sql.Date(dateLeave.getTime());
 
         Queries.applyLeaveQuery(emp_ID, dateLeaveSQL, leaveMessage);
 
-        Leave newLeave = new Leave(emp_ID, dateLeave, leaveMessage);
-        System.out.println("print1");
+        Leave newLeave = new Leave(emp_ID, dateLeave, leaveMessage, 0);
         Manager temp = new Manager();
         temp.trialFunction();
         Manager.leaveApplicationQueue.add(newLeave);
-        System.out.println("print2");
         current_employee_leaves.put(dateLeave, leaveMessage);
-        System.out.println("print3");
+        leaveStatusMap.put(dateLeave, 0);
     }
 
     private void displayAllLeaves() {
@@ -113,9 +115,22 @@ public class Employee {
             System.out.println("\nYou haven't applied for any leaves yet.\n");
             return;
         }
+        int currentLeaveNumber = 1;
         for (Date dateIterator : current_employee_leaves.keySet()) {
+            System.out.println("\n------- LEAVE NO. " + currentLeaveNumber + " -----------------------");
             System.out.println("\nDate requested - " + dateIterator);
             System.out.println("\nLeave application sent - " + current_employee_leaves.get(dateIterator));
+            if (leaveStatusMap.get(dateIterator) == 1) {
+                System.out.println("\nApplication status - Sanctioned\n");
+            }
+            else if (leaveStatusMap.get(dateIterator) == -1) {
+                System.out.println("\nApplication status - Rejected\n");
+            }
+            else {
+                System.out.println("\nApplication status - Pending\n");
+            }
+            System.out.println("------------------------------------------------------");
+            currentLeaveNumber++;
         }
     }
 

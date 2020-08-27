@@ -119,7 +119,7 @@ public class Queries {
         try {
             con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
             
-            String query = "insert into employee_leave values(?, ?, ?)";
+            String query = "insert into employee_leave values(?, ?, ?, false)";
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setInt(1, emp_id);
             preparedStmt.setDate(2, dateLeave);
@@ -162,6 +162,34 @@ public class Queries {
         return hashmap;
     }
 
+    static HashMap<Date, Integer> getLeaveStatuses(int emp_id) {
+        HashMap<Date , Integer> hashmap = new HashMap<Date, Integer>();
+
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "select * from employee_leave where emp_id = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, emp_id);
+            final ResultSet rs = preparedStmt.executeQuery();
+
+            while (rs.next()) {
+                hashmap.put(rs.getDate(2), rs.getInt(4));
+            }
+            con.close();
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace(); 
+            System.out.println("\nYour previous leaves couldn't be fetched due to an SQL Exception.\n");
+        }
+
+        return hashmap;
+    }
+
     static Queue<Leave> getLeaveManagerQuery() {
         Queue<Leave> q = new LinkedList<Leave>();
         
@@ -178,7 +206,7 @@ public class Queries {
             final ResultSet rs = preparedStmt.executeQuery();
 
             while (rs.next()) {
-                Leave currentLeave = new Leave(rs.getInt(1), rs.getDate(2), rs.getString(3));
+                Leave currentLeave = new Leave(rs.getInt(1), rs.getDate(2), rs.getString(3), rs.getInt(4));
                 q.add(currentLeave);
             }
             con.close();
@@ -206,6 +234,30 @@ public class Queries {
             preparedStmt.execute();
             
             con.close();
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace(); 
+            System.out.println("\nYour leave application couldn't be deleted due to an SQL Exception.\n");
+        }
+    }
+
+    static void sanctionLeaveApplicationQuery(int emp_id, java.sql.Date leave_date) {
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "update employee_leave set leave_status = 1 where emp_id = ? and leave_date = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, emp_id);
+            preparedStmt.setDate(2, leave_date);
+            preparedStmt.execute();
+            
+            con.close();
+
+            System.out.println("\nThe leave application was successfully sanctioned!\n");
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace(); 
             System.out.println("\nYour leave application couldn't be deleted due to an SQL Exception.\n");
