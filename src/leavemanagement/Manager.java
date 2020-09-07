@@ -1,5 +1,10 @@
 package leavemanagement;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +36,8 @@ public class Manager {
         System.out.println("3. Sanction a leave application.\n");
         System.out.println("4. Reject a leave application.\n");
         System.out.println("5. Show company's leave policy.\n");
-        System.out.println("6. Logout.");
+        System.out.println("6. Receive texts from employees.\n");
+        System.out.println("7. Logout.");
 
         do {
             System.out.println("\nEnter your choice: ");
@@ -59,6 +65,10 @@ public class Manager {
                     break;
                 }
                 case 6: {
+                    ServerSideChat(sc);
+                    break;
+                }
+                case 7: {
                     System.out.println("\nLogging out.\n");
                     return;
                 }
@@ -120,5 +130,45 @@ public class Manager {
         java.sql.Date sanctionDateSQL = new java.sql.Date(sanctionDate.getTime());
 
         Queries.sanctionLeaveApplicationQuery(sanctionID, sanctionDateSQL);
+    }
+
+    private void ServerSideChat(Scanner sc) {
+        try {
+            ServerSocket server = new ServerSocket(5000);
+            System.out.println("\nServer started.\n"); 
+  
+            System.out.println("\nWaiting for a client...\n"); 
+  
+            Socket socket = server.accept(); 
+            System.out.println("Client accepted");
+
+            DataInputStream in = new DataInputStream( 
+                new BufferedInputStream(socket.getInputStream())); 
+  
+            String line = ""; 
+  
+            // reads message from client until "Over" is sent 
+            while (!line.equals("Over")) 
+            { 
+                try
+                { 
+                    line = in.readUTF(); 
+                    System.out.println(line); 
+  
+                } 
+                catch(IOException i) 
+                { 
+                    System.out.println(i); 
+                } 
+            } 
+            System.out.println("Closing connection"); 
+  
+            // close connection 
+            socket.close();
+            server.close();
+            in.close(); 
+        } catch (IOException i) {
+            System.out.println(i);
+        }
     }
 }

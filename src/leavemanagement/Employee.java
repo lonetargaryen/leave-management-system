@@ -1,5 +1,10 @@
 package leavemanagement;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +43,8 @@ public class Employee {
         System.out.println("3. Cancel a leave application.\n");
         System.out.println("4. View all my leave applications.\n");
         System.out.println("5. Show company's leave policy.\n");
-        System.out.println("6. Logout.");
+        System.out.println("6. Send request for urgent sanction to your manager.\n");
+        System.out.println("7. Logout.");
         do {
             System.out.println("\nEnter your choice - ");
             
@@ -66,6 +72,10 @@ public class Employee {
                     break;
                 }
                 case 6: {
+                    ClientSideChat(sc);
+                    break;
+                }
+                case 7: {
                     System.out.println("\n" + emp_name + " has been logged out.\n");
                     return;
                 }
@@ -157,5 +167,46 @@ public class Employee {
             System.out.println("\nYou haven't applied for a leave on this date.\n");
             return;
         }
+    }
+
+    private void ClientSideChat(Scanner sc) {
+        try
+        {
+            System.out.println("\nEstablishing connection...\n");
+            Socket socket = new Socket("127.0.0.1", 5000);  
+            System.out.println("\nConnected.\n"); 
+  
+            // takes input from terminal 
+            DataInputStream input  = new DataInputStream(System.in); 
+  
+            // sends output to the socket 
+            DataOutputStream out    = new DataOutputStream(socket.getOutputStream()); 
+            String line = ""; 
+
+            while (!line.equals("Over")) 
+        { 
+            try
+            { 
+                line = input.readLine(); 
+                out.writeUTF(line); 
+            } 
+            catch(IOException i) 
+            { 
+                System.out.println(i); 
+            } 
+        } 
+        socket.close();
+        } 
+        catch(UnknownHostException u) 
+        { 
+            System.out.println(u); 
+        } 
+        catch(IOException i) 
+        { 
+            System.out.println(i); 
+        }
+  
+        // keep reading until "Over" is input 
+        
     }
 }
