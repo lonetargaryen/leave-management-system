@@ -80,6 +80,32 @@ public class Menu{
             CardLayout cardLayout = new CardLayout();
             mainFrame.setLayout(cardLayout);
 
+            // Making the back button and panel for login
+            JPanel goBackPanelLogin = new JPanel();
+            goBackPanelLogin.setMaximumSize(new Dimension(700, 40));
+            goBackPanelLogin.setPreferredSize(new Dimension(700, 40));
+            goBackPanelLogin.setLayout(new FlowLayout(FlowLayout.LEFT));
+            JButton goBackButtonLogin = new JButton("<-- Go Back");
+            goBackButtonLogin.addActionListener(new ActionListener() {
+                public void actionPerformed (ActionEvent e) {
+                    cardLayout.show(mainFrame.getContentPane(), "mainPanel");
+                }
+            });
+            goBackPanelLogin.add(goBackButtonLogin);
+
+            // Making the go back panel for register
+            JPanel goBackPanelRegister = new JPanel();
+            goBackPanelRegister.setMaximumSize(new Dimension(700, 40));
+            goBackPanelRegister.setPreferredSize(new Dimension(700, 40));
+            goBackPanelRegister.setLayout(new FlowLayout(FlowLayout.LEFT));
+            JButton goBackButtonRegister = new JButton("<-- Go Back");
+            goBackButtonRegister.addActionListener(new ActionListener() {
+                public void actionPerformed (ActionEvent e) {
+                    cardLayout.show(mainFrame.getContentPane(), "mainPanel");
+                }
+            });
+            goBackPanelRegister.add(goBackButtonRegister);
+
             // Creating the header panel.
             JPanel headerPanel = new JPanel();
             headerPanel.setLayout(new GridLayout(1,1));
@@ -222,6 +248,7 @@ public class Menu{
             managerLoginPanel.add(innerManagerLoginMessage);
 
             // Adding all panels to login panel
+            loginPanel.add(goBackPanelLogin);
             loginPanel.add(loginHeaderPanel);
             loginPanel.add(employeeLoginPanel);
             loginPanel.add(managerLoginPanel);
@@ -335,6 +362,7 @@ public class Menu{
             managerRegisterPanel.add(managerRegisterButton);
 
             // Adding everything to the register panel.
+            registerPanel.add(goBackPanelRegister);
             registerPanel.add(registerHeaderPanel);
             registerPanel.add(employeeRegisterPanel);
             registerPanel.add(managerRegisterPanel);
