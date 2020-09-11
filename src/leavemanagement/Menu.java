@@ -319,6 +319,27 @@ public class Menu{
             JButton employeeRegisterButton = new JButton("Register as Employee");
             employeeRegisterButton.setPreferredSize(new Dimension(200, 30));
             employeeRegisterButton.setMaximumSize(new Dimension(200, 30));
+
+            employeeRegisterButton.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent ae) {
+                    //Queries.registerQuery(1, Integer.parseInt(employeeRegisterIDText.getText()), employeeRegisterNameText.getText(), employeeRegisterDesignationText.getText());    
+                    JDialog d = new JDialog(mainFrame , "Notice", true);
+                    d.setLayout( new FlowLayout() );
+                    d.setBounds(650, 300, 250, 120);
+                    JButton b = new JButton ("OK");
+                    b.addActionListener (new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            d.setVisible(false);
+                            cardLayout.show(mainFrame.getContentPane(), "mainPanel");
+                        }
+                    });
+                    d.add( new JLabel ("You have been successfully registered!"));
+                    d.add(b);
+                    d.setSize(250, 120);
+                    d.setVisible(true);
+                }
+             });
+
             employeeRegisterPanel.add(employeeRegisterButton);
 
             // Creating the manager register panel.
@@ -359,6 +380,27 @@ public class Menu{
             JButton managerRegisterButton = new JButton("Register as Manager");
             managerRegisterButton.setPreferredSize(new Dimension(200, 30));
             managerRegisterButton.setMaximumSize(new Dimension(200, 30));
+
+            managerRegisterButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    //Queries.registerQuery(2, Integer.parseInt(managerRegisterIDText.getText()), managerRegisterNameText.getText(), "");    
+                    JDialog d = new JDialog(mainFrame , "Notification", true);
+                    d.setLayout( new FlowLayout() );
+                    d.setBounds(650, 300, 250, 120);
+                    JButton b = new JButton ("OK");
+                    b.addActionListener (new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            d.setVisible(false);
+                            cardLayout.show(mainFrame.getContentPane(), "mainPanel");
+                        }
+                    });
+                    d.add( new JLabel ("You have been successfully registered!"));
+                    d.add(b);
+                    d.setSize(250, 120);
+                    d.setVisible(true);
+                }
+             });
+
             managerRegisterPanel.add(managerRegisterButton);
 
             // Adding everything to the register panel.
