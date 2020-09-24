@@ -1,6 +1,6 @@
 package leavemanagement;
 
-//import java.util.Scanner;
+// import java.util.Scanner;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -126,22 +126,22 @@ public class Menu{
             exitButton.setPreferredSize(new Dimension(100, 30));
             exitButton.setMaximumSize(new Dimension(100, 30));
 
-             // Adding action listeners to buttons
-             loginButton.addActionListener(new ActionListener() {
-                 public void actionPerformed (ActionEvent e) {
-                    cardLayout.show(mainFrame.getContentPane(), "loginPanel");
-                 }
-             });
-             registerButton.addActionListener(new ActionListener() {
+            // Adding action listeners to buttons
+            loginButton.addActionListener(new ActionListener() {
                 public void actionPerformed (ActionEvent e) {
-                   cardLayout.show(mainFrame.getContentPane(), "registerPanel");
+                    cardLayout.show(mainFrame.getContentPane(), "loginPanel");
                 }
             });
-             exitButton.addActionListener(new ActionListener() {
-                 public void actionPerformed (ActionEvent e) {
-                     System.exit(0);
-                 }
-             });
+            registerButton.addActionListener(new ActionListener() {
+                public void actionPerformed (ActionEvent e) {
+                    cardLayout.show(mainFrame.getContentPane(), "registerPanel");
+            }
+            });
+            exitButton.addActionListener(new ActionListener() {
+                public void actionPerformed (ActionEvent e) {
+                    System.exit(0);
+                }
+            });
 
             // Creating panels for each button.
             JPanel loginButtonPanel = new JPanel();
@@ -209,6 +209,24 @@ public class Menu{
             JButton employeeLoginButton = new JButton("Login as Employee");
             employeeLoginButton.setPreferredSize(new Dimension(150, 30));
             employeeLoginButton.setMaximumSize(new Dimension(150, 30));
+
+            // Employee currentEmployee = new Employee();
+            // Action listener for the employee login button
+            employeeLoginButton.addActionListener(new ActionListener() {
+                public void actionPerformed (ActionEvent e) {
+                    // login the employee
+                    int sendID = Integer.parseInt(t1.getText());
+                    Employee currentEmployee = Queries.employeeLoginQuery(sendID);
+                    if (currentEmployee.emp_ID != -1) {
+                        mainFrame.add("employeeLogin", currentEmployee.getEmployeeMenuGUI(mainFrame, cardLayout));
+                        cardLayout.show(mainFrame.getContentPane(), "employeeLogin");
+                    }
+                    else {
+                        // make jdialog to show error
+                        System.out.println("\nCould not login.\n");
+                    }
+                }
+            });
 
             // Adding everything to employee login panel.
             innerEmployeeLoginMessage.add(employeeLoginMessage);

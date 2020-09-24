@@ -2,6 +2,7 @@ package leavemanagement;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -145,15 +146,21 @@ public class Manager {
             DataInputStream in = new DataInputStream( 
                 new BufferedInputStream(socket.getInputStream())); 
   
-            String line = ""; 
-  
+            DataOutputStream out    = new DataOutputStream(socket.getOutputStream()); 
+
+            String line = "", line2 = "";
+            sc.nextLine();
             // reads message from client until "Over" is sent 
             while (!line.equals("Over")) 
             { 
                 try
                 { 
                     line = in.readUTF(); 
-                    System.out.println(line); 
+                    System.out.printf("Employee - ");
+                    System.out.println(line);
+                    System.out.printf("You - ");
+                    line2 = sc.nextLine();
+                    out.writeUTF(line2);
   
                 } 
                 catch(IOException i) 

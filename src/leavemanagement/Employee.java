@@ -1,8 +1,11 @@
 package leavemanagement;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -10,6 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class Employee {
 
@@ -177,20 +186,25 @@ public class Employee {
             System.out.println("\nConnected.\n"); 
   
             // takes input from terminal 
-            DataInputStream input  = new DataInputStream(System.in); 
-  
+            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+            DataInputStream in = new DataInputStream( 
+                new BufferedInputStream(socket.getInputStream())); 
             // sends output to the socket 
             DataOutputStream out    = new DataOutputStream(socket.getOutputStream()); 
             String line = ""; 
-
+            sc.nextLine();
             while (!line.equals("Over")) 
         { 
             try
             { 
-                line = input.readLine(); 
-                out.writeUTF(line); 
+                System.out.printf("You - ");
+                line = sc.nextLine();
+                out.writeUTF(line);
+                line = in.readUTF();
+                System.out.printf("Manager - ");
+                System.out.println(line);
             } 
-            catch(IOException i) 
+            catch(Exception i) 
             { 
                 System.out.println(i); 
             } 
@@ -208,5 +222,310 @@ public class Employee {
   
         // keep reading until "Over" is input 
         
+    }
+
+    public JPanel getEmployeeMenuGUI(JFrame mainFrame, CardLayout cardLayout) {
+        JPanel employeeMenuPanel = new JPanel();
+        employeeMenuPanel.setLayout(new BoxLayout(employeeMenuPanel, BoxLayout.Y_AXIS));
+
+        // Creating the header panel for the employee menu.
+        JPanel welcomePanel = new JPanel();
+        welcomePanel.setLayout(new GridLayout(1,1));
+        welcomePanel.setMaximumSize(new Dimension(300,150));
+        welcomePanel.setPreferredSize(new Dimension(300,150));
+        JLabel welcomeLabel = new JLabel("Welcome " + emp_name + "!",JLabel.CENTER );
+        welcomeLabel.setFont(welcomeLabel.getFont().deriveFont(16.0f));
+        welcomePanel.add(welcomeLabel);
+
+        // Creating buttons for employee menu panel.
+        JButton displayEmployeeDetailsButton = new JButton("Display employee details.");
+        displayEmployeeDetailsButton.setPreferredSize(new Dimension(250, 30));
+        displayEmployeeDetailsButton.setMaximumSize(new Dimension(250, 30));
+        JButton applyLeaveButton = new JButton("Apply for a leave.");
+        applyLeaveButton.setPreferredSize(new Dimension(250, 30));
+        applyLeaveButton.setMaximumSize(new Dimension(250, 30));
+        JButton cancelLeaveButton = new JButton("Cancel a leave application.");
+        cancelLeaveButton.setPreferredSize(new Dimension(250, 30));
+        cancelLeaveButton.setMaximumSize(new Dimension(250, 30));
+        JButton displayAllLeavesButton = new JButton("View all my leave applications.");
+        displayAllLeavesButton.setPreferredSize(new Dimension(250, 30));
+        displayAllLeavesButton.setMaximumSize(new Dimension(250, 30));
+        JButton showPolicyButton = new JButton("Show the company's leave policy.");
+        showPolicyButton.setPreferredSize(new Dimension(250, 30));
+        showPolicyButton.setMaximumSize(new Dimension(250, 30));
+        // JButton clientSideChatButton = new JButton("Send a request for urgent sanction to your manager.");
+        // clientSideChatButton.setPreferredSize(new Dimension(350, 30));
+        // clientSideChatButton.setMaximumSize(new Dimension(350, 30));
+        JButton logoutButton = new JButton("Logout.");
+        logoutButton.setPreferredSize(new Dimension(100, 30));
+        logoutButton.setMaximumSize(new Dimension(100, 30));
+
+        // Creating button listeners for each button
+
+        displayEmployeeDetailsButton.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent e) {
+                JDialog d = new JDialog(mainFrame , "Employee Details", true);
+                d.setLayout( new FlowLayout() );
+                d.setBounds(650, 300, 200, 200);
+                JButton b = new JButton ("OK");
+                b.addActionListener (new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        d.setVisible(false);
+                    }
+                });
+                d.add(Box.createRigidArea(new Dimension(0, 30)));
+                d.add( new JLabel ("ID - " + emp_ID));
+                d.add(Box.createRigidArea(new Dimension(0, 30)));
+                d.add( new JLabel ("Name - " + emp_name));
+                d.add(Box.createRigidArea(new Dimension(0, 30)));
+                d.add( new JLabel ("Designation - " + emp_designation));
+                d.add(Box.createRigidArea(new Dimension(20, 30)));
+                d.add(b);
+                d.setSize(200, 200);
+                d.setVisible(true);
+                return;
+            }
+        });
+
+        applyLeaveButton.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent e) {
+                JDialog d = new JDialog(mainFrame , "Apply Leave Menu", true);
+                d.setLayout( new FlowLayout() );
+                d.setBounds(500, 250, 400, 250);
+                JButton b = new JButton ("Apply");
+                
+
+                JPanel innerLeaveDatePanel = new JPanel();
+                innerLeaveDatePanel.setLayout(new FlowLayout());
+                JLabel innerLeaveDateMessage = new JLabel("Enter date of leave (dd/mm/yyyy) - ");
+                JTextField t1 = new JTextField();
+                t1.setSize(new Dimension(70,30));
+                t1.setMaximumSize(new Dimension(70,30));
+                t1.setPreferredSize(new Dimension(70,30));
+                innerLeaveDatePanel.add(innerLeaveDateMessage);
+                innerLeaveDatePanel.add(t1);
+
+                JPanel innerLeaveMessagePanel = new JPanel();
+                innerLeaveMessagePanel.setLayout(new FlowLayout());
+                JLabel innerLeaveMessageMessage = new JLabel("Enter reason for leave - ");
+                JTextField t2 = new JTextField();
+                t2.setSize(new Dimension(150,30));
+                t2.setMaximumSize(new Dimension(150,30));
+                t2.setPreferredSize(new Dimension(150,30));
+                innerLeaveMessagePanel.add(innerLeaveMessageMessage);
+                innerLeaveMessagePanel.add(t2);
+
+                b.addActionListener (new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String dateLeaveString = t1.getText();
+                        String reasonLeave = t2.getText();
+
+                        Date dateLeave = new Date();
+                        try {
+                            dateLeave = new SimpleDateFormat("dd/MM/yyyy").parse(dateLeaveString);
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                        java.sql.Date dateLeaveSQL = new java.sql.Date(dateLeave.getTime());
+
+                        Queries.applyLeaveQuery(emp_ID, dateLeaveSQL, reasonLeave);
+
+                        Leave newLeave = new Leave(emp_ID, dateLeave, reasonLeave, 0);
+                        Manager temp = new Manager();
+                        temp.trialFunction();
+                        Manager.leaveApplicationQueue.add(newLeave);
+                        current_employee_leaves.put(dateLeave, reasonLeave);
+                        leaveStatusMap.put(dateLeave, 0);
+
+                        JDialog d2 = new JDialog(mainFrame , "Notification", true);
+                        d2.setLayout( new FlowLayout() );
+                        d2.setBounds(650, 300, 300, 120);
+                        JButton b2 = new JButton ("OK");
+                        b2.addActionListener (new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                d2.setVisible(false);
+                            }
+                        });
+                        d2.add(Box.createRigidArea(new Dimension(0, 30)));
+                        d2.add( new JLabel ("Your leave application has been submitted!"));
+                        d2.add(Box.createRigidArea(new Dimension(0, 30)));
+                        d2.add(b2);
+                        d2.setSize(300, 120);
+                        d2.setVisible(true);
+                        d.setVisible(false);
+                    }
+                });
+
+                d.add(Box.createRigidArea(new Dimension(0, 30)));
+                d.add(innerLeaveDatePanel);
+                d.add(innerLeaveMessagePanel);
+                d.add(Box.createRigidArea(new Dimension(50, 0)));
+                d.add(b);
+                d.setSize(400, 250);
+                d.setVisible(true);
+                return;
+            }
+        });
+
+        cancelLeaveButton.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent e) {
+                JDialog d = new JDialog(mainFrame , "Cancel Leave Menu", true);
+                d.setLayout( new FlowLayout() );
+                d.setBounds(500, 250, 400, 250);
+                JButton b = new JButton ("Cancel");
+                
+
+                JPanel innerLeaveDatePanel = new JPanel();
+                innerLeaveDatePanel.setLayout(new FlowLayout());
+                JLabel innerLeaveDateMessage = new JLabel("Enter date of leave to cancel (dd/mm/yyyy) - ");
+                JTextField t1 = new JTextField();
+                t1.setSize(new Dimension(70,30));
+                t1.setMaximumSize(new Dimension(70,30));
+                t1.setPreferredSize(new Dimension(70,30));
+                innerLeaveDatePanel.add(innerLeaveDateMessage);
+                innerLeaveDatePanel.add(t1);
+
+                b.addActionListener (new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String dateLeaveString = t1.getText();
+
+                        Date dateLeave = new Date();
+                        try {
+                            dateLeave = new SimpleDateFormat("dd/MM/yyyy").parse(dateLeaveString);
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                        java.sql.Date dateLeaveSQL = new java.sql.Date(dateLeave.getTime());
+
+                        if (current_employee_leaves.containsKey(dateLeaveSQL)) {
+                            current_employee_leaves.remove(dateLeaveSQL);
+                            Manager.deleteLeave(emp_ID, dateLeaveSQL);
+                            Queries.deleteLeaveQuery(emp_ID, dateLeaveSQL);
+                
+                            JDialog d2 = new JDialog(mainFrame , "Notification", true);
+                            d2.setLayout( new FlowLayout() );
+                            d2.setBounds(650, 300, 300, 120);
+                            JButton b2 = new JButton ("OK");
+                            b2.addActionListener (new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    d2.setVisible(false);
+                                }
+                            });
+                            d2.add(Box.createRigidArea(new Dimension(0, 30)));
+                            d2.add( new JLabel ("Your leave application has been cancelled!"));
+                            d2.add(Box.createRigidArea(new Dimension(0, 30)));
+                            d2.add(b2);
+                            d2.setSize(300, 120);
+                            d2.setVisible(true);
+
+                            System.out.println("\nThe leave has been cancelled and project manager has been notified.\n");
+                        }
+                        else {
+                            JDialog d2 = new JDialog(mainFrame , "Notification", true);
+                            d2.setLayout( new FlowLayout() );
+                            d2.setBounds(650, 300, 300, 120);
+                            JButton b2 = new JButton ("OK");
+                            b2.addActionListener (new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    d2.setVisible(false);
+                                }
+                            });
+                            d2.add(Box.createRigidArea(new Dimension(0, 30)));
+                            d2.add( new JLabel ("You haven't applied for a leave on this date."));
+                            d2.add(Box.createRigidArea(new Dimension(0, 30)));
+                            d2.add(b2);
+                            d2.setSize(300, 120);
+                            d2.setVisible(true);
+                            System.out.println("\nYou haven't applied for a leave on this date.\n");
+                            return;
+                        }
+
+            
+                        d.setVisible(false);
+                    }
+                });
+
+                d.add(Box.createRigidArea(new Dimension(0, 30)));
+                d.add(innerLeaveDatePanel);
+                d.add(Box.createRigidArea(new Dimension(50, 0)));
+                d.add(b);
+                d.setSize(400, 250);
+                d.setVisible(true);
+                return;
+            }
+        });
+
+        logoutButton.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent e) {
+                JDialog d = new JDialog(mainFrame , "Notice", true);
+                d.setLayout( new FlowLayout() );
+                d.setBounds(650, 300, 200, 120);
+                JButton b = new JButton ("OK");
+                b.addActionListener (new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        d.setVisible(false);
+                        cardLayout.show(mainFrame.getContentPane(), "mainPanel");
+                    }
+                });
+                d.add(Box.createRigidArea(new Dimension(0, 30)));
+                d.add( new JLabel (emp_name + " has been logged out!"));
+                d.add(Box.createRigidArea(new Dimension(0, 30)));
+                d.add(b);
+                d.setSize(200, 120);
+                d.setVisible(true);
+                return;
+            }
+        });
+        // clientSideChatButton.addActionListener(new ActionListener() {
+        //     public void actionPerformed (ActionEvent e) {
+        //         // trial.main(met);
+        //         JChatBox.main(new String[0]);
+        //     }
+        // });
+
+
+        // Creating panels for each button.
+        JPanel displayEmployeeDetailsPanel = new JPanel();
+        displayEmployeeDetailsPanel.setLayout(new BoxLayout(displayEmployeeDetailsPanel, BoxLayout.X_AXIS));
+        displayEmployeeDetailsPanel.add(displayEmployeeDetailsButton);
+        JPanel applyLeavePanel = new JPanel();
+        applyLeavePanel.setLayout(new BoxLayout(applyLeavePanel, BoxLayout.X_AXIS));
+        applyLeavePanel.add(applyLeaveButton);
+        JPanel cancelLeavePanel  = new JPanel();
+        cancelLeavePanel.setLayout(new BoxLayout(cancelLeavePanel, BoxLayout.X_AXIS));
+        cancelLeavePanel.add(cancelLeaveButton);
+        JPanel displayAllLeavesPanel  = new JPanel();
+        displayAllLeavesPanel.setLayout(new BoxLayout(displayAllLeavesPanel, BoxLayout.X_AXIS));
+        displayAllLeavesPanel.add(displayAllLeavesButton);
+        JPanel showPolicyPanel  = new JPanel();
+        showPolicyPanel.setLayout(new BoxLayout(showPolicyPanel, BoxLayout.X_AXIS));
+        showPolicyPanel.add(showPolicyButton);
+        // JPanel clientSideChatPanel  = new JPanel();
+        // clientSideChatPanel.setLayout(new BoxLayout(clientSideChatPanel, BoxLayout.X_AXIS));
+        // clientSideChatPanel.add(clientSideChatButton);
+        JPanel logoutPanel  = new JPanel();
+        logoutPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        logoutPanel.add(logoutButton);
+
+        JPanel menuButtonPanel = new JPanel();
+        menuButtonPanel.setLayout(new BoxLayout(menuButtonPanel,BoxLayout.Y_AXIS));
+        menuButtonPanel.add(displayEmployeeDetailsPanel);
+        menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        menuButtonPanel.add(applyLeavePanel);
+        menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        menuButtonPanel.add(cancelLeavePanel);
+        menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        menuButtonPanel.add(displayAllLeavesPanel);
+        menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        menuButtonPanel.add(showPolicyPanel);
+        menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        // menuButtonPanel.add(clientSideChatPanel);
+        // menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        menuButtonPanel.add(logoutPanel);
+
+        employeeMenuPanel.add(welcomePanel);
+        employeeMenuPanel.add(menuButtonPanel);
+
+        return employeeMenuPanel;
     }
 }
