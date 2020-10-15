@@ -263,4 +263,28 @@ public class Queries {
             System.out.println("\nYour leave application couldn't be deleted due to an SQL Exception.\n");
         }
     }
+
+    static void rejectLeaveApplicationQuery(int emp_id, java.sql.Date leave_date) {
+        ResourceBundle reader = null;
+        reader = ResourceBundle.getBundle("resources/dbconfig");
+
+        Connection con;
+
+        try {
+            con = DriverManager.getConnection(reader.getString("db.url"), reader.getString("db.username"), reader.getString("db.password"));
+            
+            String query = "update employee_leave set leave_status = -1 where emp_id = ? and leave_date = ?";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, emp_id);
+            preparedStmt.setDate(2, leave_date);
+            preparedStmt.execute();
+            
+            con.close();
+
+            System.out.println("\nThe leave application was successfully rejected!\n");
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace(); 
+            System.out.println("\nYour leave application couldn't be rejected due to an SQL Exception.\n");
+        }
+    }
 }

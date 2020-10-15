@@ -1,11 +1,11 @@
 package leavemanagement;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
+// import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+// import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -20,13 +20,21 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Employee {
+public class Employee implements Runnable {
 
     public String emp_name;
     public int emp_ID;
     public String emp_designation;
     public HashMap<Date, String> current_employee_leaves;
     public HashMap<Date, Integer> leaveStatusMap;
+    private Thread t;
+
+    public void run() {
+        System.out.println("\nEmployee ID - " + emp_ID);
+        System.out.println("\nEmployee name - " + emp_name);
+        System.out.println("\nDesignation - " + emp_designation);
+        return;
+    }
 
     public Employee() {
         emp_name = "";
@@ -97,9 +105,14 @@ public class Employee {
     }
 
     private void showEmployeeDetails() {
-        System.out.println("\nEmployee ID - " + emp_ID);
-        System.out.println("\nEmployee name - " + emp_name);
-        System.out.println("\nDesignation" + emp_designation);
+        // System.out.println("\nEmployee ID - " + emp_ID);
+        // System.out.println("\nEmployee name - " + emp_name);
+        // System.out.println("\nDesignation" + emp_designation);
+        t = new Thread (this, "show employee details thread");
+        System.out.println("Starting thread number - " + t.getId());
+        t.start();
+        t.interrupt();
+        return;
     }
 
     private void applyLeave(Scanner sc) {
@@ -186,7 +199,7 @@ public class Employee {
             System.out.println("\nConnected.\n"); 
   
             // takes input from terminal 
-            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+            // BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
             DataInputStream in = new DataInputStream( 
                 new BufferedInputStream(socket.getInputStream())); 
             // sends output to the socket 
@@ -253,9 +266,9 @@ public class Employee {
         JButton showPolicyButton = new JButton("Show the company's leave policy.");
         showPolicyButton.setPreferredSize(new Dimension(250, 30));
         showPolicyButton.setMaximumSize(new Dimension(250, 30));
-        // JButton clientSideChatButton = new JButton("Send a request for urgent sanction to your manager.");
-        // clientSideChatButton.setPreferredSize(new Dimension(350, 30));
-        // clientSideChatButton.setMaximumSize(new Dimension(350, 30));
+        JButton clientSideChatButton = new JButton("Send a request for urgent sanction to your manager.");
+        clientSideChatButton.setPreferredSize(new Dimension(350, 30));
+        clientSideChatButton.setMaximumSize(new Dimension(350, 30));
         JButton logoutButton = new JButton("Logout.");
         logoutButton.setPreferredSize(new Dimension(100, 30));
         logoutButton.setMaximumSize(new Dimension(100, 30));
@@ -455,6 +468,58 @@ public class Employee {
             }
         });
 
+        displayAllLeavesButton.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent e) {
+                JDialog d = new JDialog(mainFrame , "Employee Leaves", true);
+                d.setLayout(new FlowLayout());
+                d.setBounds(550, 200, 400, 400);
+                JButton b = new JButton ("OK");
+                b.addActionListener (new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        d.setVisible(false);
+                    }
+                });
+
+                JPanel allLeaveDetailsPanel = new JPanel();
+                allLeaveDetailsPanel.setLayout(new BoxLayout(allLeaveDetailsPanel, BoxLayout.Y_AXIS));
+
+
+                if (current_employee_leaves.isEmpty()) {
+                    d.add( new JLabel ("You haven't applied for any leaves yet."));
+                }
+                else {
+                    int currentLeaveNumber = 1;
+                    for (Date dateIterator : current_employee_leaves.keySet()) {
+                        JPanel leaveDetailsPanel = new JPanel();
+                        leaveDetailsPanel.setLayout(new BoxLayout(leaveDetailsPanel, BoxLayout.Y_AXIS));
+                        leaveDetailsPanel.add( new JLabel ("------- LEAVE NO. " + currentLeaveNumber + " -----------------------"));
+                        leaveDetailsPanel.add( new JLabel ("Date requested - " + dateIterator));
+                        leaveDetailsPanel.add( new JLabel ("Leave application sent - " + current_employee_leaves.get(dateIterator)));
+
+                        if (leaveStatusMap.get(dateIterator) == 1) {
+                            leaveDetailsPanel.add( new JLabel ("Application status - Sanctioned"));
+                        }
+                        else if (leaveStatusMap.get(dateIterator) == -1) {
+                            leaveDetailsPanel.add( new JLabel ("Application status - Rejected"));
+                        }
+                        else {
+                            leaveDetailsPanel.add( new JLabel ("Application status - Pending"));
+                        }
+
+                        leaveDetailsPanel.add( new JLabel ("------------------------------------------------------"));
+                        currentLeaveNumber++;
+                        allLeaveDetailsPanel.add(leaveDetailsPanel);
+                    }
+                }
+
+                d.add(allLeaveDetailsPanel);
+                d.add(b);
+                d.setSize(400, 400);
+                d.setVisible(true);
+                return;
+            }
+        });
+
         logoutButton.addActionListener(new ActionListener() {
             public void actionPerformed (ActionEvent e) {
                 JDialog d = new JDialog(mainFrame , "Notice", true);
@@ -476,12 +541,57 @@ public class Employee {
                 return;
             }
         });
-        // clientSideChatButton.addActionListener(new ActionListener() {
-        //     public void actionPerformed (ActionEvent e) {
-        //         // trial.main(met);
-        //         JChatBox.main(new String[0]);
-        //     }
-        // });
+
+        clientSideChatButton.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent e) {
+                try {
+                    // System.out.println("\nEstablishing connection...\n");
+                    // Socket socket = new Socket("127.0.0.1", 5000);  
+                    // System.out.println("\nConnected.\n"); 
+        
+                    // // takes input from terminal 
+                    // // BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+                    // DataInputStream in = new DataInputStream( 
+                    //     new BufferedInputStream(socket.getInputStream())); 
+                    // // sends output to the socket 
+                    // DataOutputStream out    = new DataOutputStream(socket.getOutputStream());
+                    
+                    JDialog d = new JDialog(mainFrame , "Client Side Chat", true);
+                    d.setLayout( new FlowLayout() );
+                    d.setBounds(650, 300, 200, 120);
+
+                    JPanel chatMessagesArea = new JPanel();
+                    chatMessagesArea.setLayout(new BoxLayout(chatMessagesArea, BoxLayout.Y_AXIS));
+                    chatMessagesArea.setMaximumSize(new Dimension(200, 70));
+                    chatMessagesArea.setPreferredSize(new Dimension(200, 70));
+
+
+                    JPanel sendMessagesArea = new JPanel();
+                    sendMessagesArea.setLayout( new FlowLayout() );
+
+                    JTextField t1 = new JTextField();
+                    t1.setSize(new Dimension(70,30));
+                    t1.setMaximumSize(new Dimension(70,30));
+                    t1.setPreferredSize(new Dimension(70,30));
+
+                    JButton b = new JButton ("Send");
+                    b.addActionListener (new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            
+                        }
+                    });
+                    d.add(Box.createRigidArea(new Dimension(0, 30)));
+                    d.add( new JLabel (emp_name + " has been logged out!"));
+                    d.add(Box.createRigidArea(new Dimension(0, 30)));
+                    d.add(b);
+                    d.setSize(200, 120);
+                    d.setVisible(true);
+                } catch (Exception excep) {
+                    System.out.println("Error.");
+                }
+                
+            }
+        });
 
 
         // Creating panels for each button.

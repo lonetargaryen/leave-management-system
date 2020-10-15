@@ -1,66 +1,65 @@
 package leavemanagement;
 
-// import java.util.Scanner;
+import java.util.Scanner;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 
-public class Menu{
+public class Menu {
 
-    static void displayMainMenu() {
-        // Scanner sc = new Scanner(System.in);
-        // outerloop:
-        // do {
-        //     System.out.println("\n-------------- LEAVE MANAGEMENT SYSTEM --------------\n");
-        //     System.out.println("1. Login.\n");
-        //     System.out.println("2. Register.\n");
-        //     System.out.println("3. Exit.\n");
-        //     System.out.println("Enter your choice: ");
+    static void displayMainMenuCLI() {
+        Scanner sc = new Scanner(System.in);
+        outerloop:
+        do {
+            System.out.println("\n-------------- LEAVE MANAGEMENT SYSTEM --------------\n");
+            System.out.println("1. Login.\n");
+            System.out.println("2. Register.\n");
+            System.out.println("3. Exit.\n");
+            System.out.println("Enter your choice: ");
             
-        //     int userChoice = sc.nextInt();
+            int userChoice = sc.nextInt();
 
-        //     switch (userChoice) {
-        //         case 1: {
-        //             System.out.println("\nLogin handler will be called.\n");
-        //             System.out.println("\nEnter 1 for employee login and 2 for project manager login - ");
-        //             int jobType = sc.nextInt();
-        //             if (jobType == 1) {
-        //                 //call employee login
-        //                 LoginRegister.employeeLoginHandler(sc);
-        //             }
-        //             else if (jobType ==2) {
-        //                 //call PM login
-        //                 LoginRegister.managerLoginHandler(sc);
-        //             }
-        //             else {
-        //                 System.out.println("\nInvalid choice.\n");
-        //             }
-        //             break;
-        //         }
-        //         case 2: {
-        //             System.out.println("Register handler will be called.\n");
-        //             LoginRegister.registerHandler(sc);
-        //             break;
-        //         }
-        //         case 3: {
-        //             System.out.println("\nExiting...\n");
-        //             sc.close();
-        //             break outerloop;
-        //         }
-        //         default: {
-        //             System.out.println("Invalid option.\n");
-        //             break;
-        //         }
-        //     }
-        // } while (true);
+            switch (userChoice) {
+                case 1: {
+                    System.out.println("\nLogin handler will be called.\n");
+                    System.out.println("\nEnter 1 for employee login and 2 for project manager login - ");
+                    int jobType = sc.nextInt();
+                    if (jobType == 1) {
+                        //call employee login
+                        LoginRegister.employeeLoginHandler(sc);
+                    }
+                    else if (jobType ==2) {
+                        //call PM login
+                        LoginRegister.managerLoginHandler(sc);
+                    }
+                    else {
+                        System.out.println("\nInvalid choice.\n");
+                    }
+                    break;
+                }
+                case 2: {
+                    System.out.println("Register handler will be called.\n");
+                    LoginRegister.registerHandler(sc);
+                    break;
+                }
+                case 3: {
+                    System.out.println("\nExiting...\n");
+                    sc.close();
+                    break outerloop;
+                }
+                default: {
+                    System.out.println("Invalid option.\n");
+                    break;
+                }
+            }
+        } while (true);
         
-        // sc.close();
+        sc.close();
+    }
 
-
-        // NEW GUI EXPERIMENTAL CODE
-
+    static void displayMainMenuGUI() {
             // BEGINNING OF MAIN MENU CODE
 
             // Creating main frame that will have all the cards.
@@ -257,6 +256,23 @@ public class Menu{
             JButton managerLoginButton = new JButton("Login as Manager");
             managerLoginButton.setPreferredSize(new Dimension(150, 30));
             managerLoginButton.setMaximumSize(new Dimension(150, 30));
+
+            // Action listener for the employee login button
+            managerLoginButton.addActionListener(new ActionListener() {
+                public void actionPerformed (ActionEvent e) {
+                    // login the manager
+                    int sendID = Integer.parseInt(t2.getText());
+                    Manager currentManager = Queries.managerLoginQuery(sendID);
+                    if (currentManager.manager_ID != -1) {
+                        mainFrame.add("managerLogin", currentManager.getManagerMenuGUI(mainFrame, cardLayout));
+                        cardLayout.show(mainFrame.getContentPane(), "managerLogin");
+                    }
+                    else {
+                        // make jdialog to show error
+                        System.out.println("\nCould not login.\n");
+                    }
+                }
+            });
 
             // Adding everything to manager login panel.
             innerManagerLoginMessage.add(managerLoginPanelMessage);

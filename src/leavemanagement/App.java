@@ -2,6 +2,7 @@ package leavemanagement;
 
 public class App {
     public static void main(String[] args) {
-        Menu.displayMainMenu();
+        // Menu.displayMainMenuCLI();
+        Menu.displayMainMenuGUI();
     }
 }
