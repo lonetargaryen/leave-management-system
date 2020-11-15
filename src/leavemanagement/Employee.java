@@ -627,8 +627,8 @@ public class Employee implements Runnable {
         menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
         menuButtonPanel.add(displayAllLeavesPanel);
         menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-        menuButtonPanel.add(showPolicyPanel);
-        menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        // menuButtonPanel.add(showPolicyPanel);
+        // menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
         // menuButtonPanel.add(clientSideChatPanel);
         // menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         menuButtonPanel.add(logoutPanel);

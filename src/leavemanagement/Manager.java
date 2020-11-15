@@ -197,20 +197,20 @@ public class Manager {
 
         // Creating buttons for employee menu panel.
         JButton displayManagerDetailsButton = new JButton("Display manager details.");
-        displayManagerDetailsButton.setPreferredSize(new Dimension(250, 30));
-        displayManagerDetailsButton.setMaximumSize(new Dimension(250, 30));
+        displayManagerDetailsButton.setPreferredSize(new Dimension(260, 30));
+        displayManagerDetailsButton.setMaximumSize(new Dimension(260, 30));
         JButton displayAllLeavesButton = new JButton("View all employees' leave applications.");
-        displayAllLeavesButton.setPreferredSize(new Dimension(250, 30));
-        displayAllLeavesButton.setMaximumSize(new Dimension(250, 30));
+        displayAllLeavesButton.setPreferredSize(new Dimension(260, 30));
+        displayAllLeavesButton.setMaximumSize(new Dimension(260, 30));
         JButton sanctionLeaveButton = new JButton("Sanction a leave application.");
-        sanctionLeaveButton.setPreferredSize(new Dimension(250, 30));
-        sanctionLeaveButton.setMaximumSize(new Dimension(250, 30));
+        sanctionLeaveButton.setPreferredSize(new Dimension(260, 30));
+        sanctionLeaveButton.setMaximumSize(new Dimension(260, 30));
         JButton rejectLeaveButton = new JButton("Reject a leave application.");
-        rejectLeaveButton.setPreferredSize(new Dimension(250, 30));
-        rejectLeaveButton.setMaximumSize(new Dimension(250, 30));
+        rejectLeaveButton.setPreferredSize(new Dimension(260, 30));
+        rejectLeaveButton.setMaximumSize(new Dimension(260, 30));
         JButton showPolicyButton = new JButton("Show the company's leave policy.");
-        showPolicyButton.setPreferredSize(new Dimension(250, 30));
-        showPolicyButton.setMaximumSize(new Dimension(250, 30));
+        showPolicyButton.setPreferredSize(new Dimension(260, 30));
+        showPolicyButton.setMaximumSize(new Dimension(260, 30));
         JButton serverSideChatButton = new JButton("Accept employee chat requests.");
         serverSideChatButton.setPreferredSize(new Dimension(350, 30));
         serverSideChatButton.setMaximumSize(new Dimension(350, 30));
@@ -247,7 +247,7 @@ public class Manager {
             public void actionPerformed (ActionEvent e) {
                 JDialog d = new JDialog(mainFrame , "All Employee Leave Menu", true);
                 d.setLayout( new FlowLayout() );
-                d.setBounds(500, 250, 400, 250);
+                d.setBounds(500, 250, 400, 500);
                 JButton b = new JButton ("OK");
                 b.addActionListener (new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -291,7 +291,7 @@ public class Manager {
                 d.add(allLeaveDetailsPanel);
                 d.add(b);
 
-                d.setSize(400, 250);
+                d.setSize(400, 500);
                 d.setVisible(true);
                 return;
             }
@@ -552,8 +552,8 @@ public class Manager {
         menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
         menuButtonPanel.add(rejectLeavePanel);
         menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-        menuButtonPanel.add(showPolicyPanel);
-        menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        // menuButtonPanel.add(showPolicyPanel);
+        // menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 30)));
         // menuButtonPanel.add(clientSideChatPanel);
         // menuButtonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         menuButtonPanel.add(logoutPanel);
